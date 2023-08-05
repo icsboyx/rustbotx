@@ -64,7 +64,7 @@ Contributions are welcome! If you find a bug or want to add new features, feel f
 
 ## Special Thanks
 
-This project was inspired by the Twitch channel of [Prof. Andrea Pollini](https://www.twitch.tv/profandreapollini) and the supportive Twitch community. Thanks to their encouragement and feedback, this bot was created to enhance the Twitch chat experience. Special thanks also go to the developers of Pygame and gTTS for their excellent libraries. 
+This project was inspired by the Twitch channel of [Prof. Andrea Pollini](https://www.twitch.tv/profandreapollini) and the supportive Twitch community. Thanks to their encouragement and feedback!
 
 
 
