@@ -29,11 +29,12 @@ fn main() {
             let stream_clone_receive = stream.try_clone().expect(
                 "Failed to clone  the stream for the thread that will receive data from socket",
             );
-
             // Start a new thread to handle message receiving
             thread::spawn(move || {
                 receive_messages::receive_messages(stream_clone_receive);
             });
+
+
             // Clone the stream for the thread that read from user input.
             let stream_clone_user_input = stream
                 .try_clone()
@@ -62,7 +63,7 @@ fn main() {
                     .write_all(join_message.as_bytes())
                     .expect("Failed to write to stream");
                 println!("Joining channel: {}", channel);
-                let _message = format!("Hello from the bot!");
+                // let _message = format!("Hello from the bot!");
                 //send_messages(&stream, channel, message);
             }
         }
