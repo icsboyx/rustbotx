@@ -16,14 +16,16 @@ fn main() {
 
     // Register the CTRL+C signal handler
     set_handler(move || {
-        println!("CTRL+C signal received. Terminating...");
+        // println!("CTRL+C signal received. Terminating...");
+        console::println("CTRL+C signal received. Terminating...");
         std::process::exit(0);
     })
     .expect("Error setting Ctrl-C handler");
 
     match TcpStream::connect("irc.chat.twitch.tv:6667") {
         Ok(mut stream) => {
-            println!("Connected to Twitch IRC server");
+            // println!("Connected to Twitch IRC server");
+            console::println("Connected to Twitch IRC server");
 
             // Start a console thread.
             thread::spawn(move || {
@@ -58,7 +60,7 @@ fn main() {
                 .write_all(nick_message.as_bytes())
                 .expect("Failed to write to stream");
 
-            println!("Authentication message sent");
+            console::println("Authentication message sent");
 
             // Join the specified channels
             for channel in &config.channels {
@@ -66,13 +68,14 @@ fn main() {
                 stream
                     .write_all(join_message.as_bytes())
                     .expect("Failed to write to stream");
-                println!("Joining channel: {}", channel);
+                console::println(format!("Joining channel: {}", channel));
                 // let _message = format!("Hello from the bot!");
                 //send_messages(&stream, channel, message);
             }
         }
 
-        Err(e) => eprintln!("Error connecting to Twitch IRC server: {}", e),
+        // Err(e) => eprintln!("Error connecting to Twitch IRC server: {}", e),
+        Err(e) => console::println(format!("Error connecting to Twitch IRC server: {}", e)),
     }
     loop {
         // Sleep for 1 second to avoid busy waiting and reduce CPU usage

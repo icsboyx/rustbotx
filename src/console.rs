@@ -1,35 +1,20 @@
-use std::io::{self, Write};
+use std::io;
 
-pub fn start_console() {
-    loop {
-        print_prompt();
+
+pub fn start_console(){
+loop {
+        println!("Press ^C to terminate the program...");
         let mut input = String::new();
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                // Process the user input here
-                process_input(&input.trim());
-            }
-            Err(error) => eprintln!("Error reading input: {}", error),
+        if input == "quit" {
+            break;
+        } else {
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read line");
+
         }
     }
 }
-
-pub fn print_prompt() {
-    print!("################# "); // Display the prompt
-    io::stdout().flush().unwrap();
-}
-
-pub fn process_input(input: &str) {
-    match input {
-        "quit" => {
-            println!("Goodbye!");
-            std::process::exit(0);
-        }
-        "hello" => {
-            println!("Hello, User!");
-        }
-        _ => {
-            println!("Invalid command: {}", input);
-        }
-    }
+pub fn println<T: ToString>(message: T) {
+    println!("[CONSOLE]: {}", message.to_string());
 }
