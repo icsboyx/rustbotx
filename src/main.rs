@@ -5,11 +5,11 @@ use std::thread;
 use std::time::Duration;
 
 // Import the external custom modules
+mod console;
 mod read_user_input;
 mod receive_messages;
 mod send_messages;
 mod startup_config;
-
 
 fn main() {
     let config = startup_config::load_config();
@@ -25,6 +25,11 @@ fn main() {
         Ok(mut stream) => {
             println!("Connected to Twitch IRC server");
 
+            // Start a console thread.
+            thread::spawn(move || {
+                console::start_console();
+            });
+
             // Clone the stream for the thread that will receive data from socket.
             let stream_clone_receive = stream.try_clone().expect(
                 "Failed to clone  the stream for the thread that will receive data from socket",
@@ -33,7 +38,6 @@ fn main() {
             thread::spawn(move || {
                 receive_messages::receive_messages(stream_clone_receive);
             });
-
 
             // Clone the stream for the thread that read from user input.
             let stream_clone_user_input = stream
@@ -46,7 +50,7 @@ fn main() {
 
             // Send authentication message to the IRC server
             let pass_message = format!("PASS oauth:{}\r\n", config.token);
-            let nick_message = format!("NICK {}\r\n",config.nickname);
+            let nick_message = format!("NICK {}\r\n", config.nickname);
             stream
                 .write_all(pass_message.as_bytes())
                 .expect("Failed to write to stream");
@@ -75,4 +79,3 @@ fn main() {
         thread::sleep(Duration::from_secs(1));
     }
 }
-
