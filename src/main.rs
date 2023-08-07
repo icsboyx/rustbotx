@@ -4,8 +4,8 @@ use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
 
-// Import the external custom modules
-mod console;
+// // Import the external custom modules
+// mod console;
 // use console::Console;
 mod standard_console;
 use standard_console::LocalConsole;
