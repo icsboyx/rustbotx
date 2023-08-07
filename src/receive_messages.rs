@@ -1,14 +1,25 @@
 
+
 use std::io::Read;
 use std::net::TcpStream;
+
+use colored::Color;
+
+use crate::standard_console::LocalConsole;
+
+
 // Import the external custom modules
-use crate::Console;
+// use crate::console::Console; // Make sure to adjust the path as needed
 
 
 pub fn receive_messages(mut stream: TcpStream,) {
 
     let mut buffer = [0; 1024];
-    let mut console = Console::new();
+    let console = LocalConsole::new(module_path!(), Color::Green);
+
+
+    console.console_println(format!("receive_messages thread:  @@@@@@@@@@@@@@@@@@@@@"));
+
     loop {
         match stream.read(&mut buffer) {
             Ok(bytes_read) => {
@@ -28,3 +39,5 @@ pub fn receive_messages(mut stream: TcpStream,) {
         }
     }
 }
+
+

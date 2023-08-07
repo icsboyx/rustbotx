@@ -3,11 +3,13 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
-// use std::sync::{Arc, Mutex};
 
 // Import the external custom modules
 mod console;
 use console::Console;
+mod standard_console;
+use standard_console::LocalConsole;
+use colored::*;
 
 
 // mod read_user_input;
@@ -17,8 +19,10 @@ mod startup_config;
 
 fn main() {
     let config = startup_config::load_config();
-    let mut console = Console::new();
- 
+    // let console = console::Console::new(16);
+    let console = LocalConsole::new(module_path!(), Color::Blue);
+
+    console.console_println("Main Thread ###################################");
 
 
    // Register the CTRL+C signal handler
@@ -86,3 +90,5 @@ fn main() {
         thread::sleep(Duration::from_secs(1));
     }
 }
+
+

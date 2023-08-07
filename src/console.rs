@@ -1,36 +1,42 @@
-// console.rs
-
-use colored::*;
+use std::sync::{Arc, Mutex};
+use std::thread;
 
 pub struct Console {
-    message_queue: Vec<String>,
+    messages_queue: Arc<Mutex<Vec<String>>>,
+    max_capacity: usize,
 }
 
 impl Console {
-    pub fn new() -> Self {
+    pub fn new(max_capacity: usize) -> Self {
         Console {
-            message_queue: Vec::new(),
+            messages_queue: Arc::new(Mutex::new(Vec::new())),
+            max_capacity,
         }
     }
 
-    pub fn console_start(&mut self) {
-        self.queue_console_message("Console started");
-        self.process_queue();
+    pub fn console_start(&self) {
+        let queue_clone = self.messages_queue.clone();
+        let max_capacity = self.max_capacity;
+
+        thread::spawn(move || {
+            loop {
+                thread::sleep(std::time::Duration::from_secs(1));
+                let mut messages = queue_clone.lock().unwrap();
+                while messages.len() > max_capacity {
+                    messages.remove(0);
+                }
+                for message in messages.iter() {
+                    println!("{}", message);
+                }
+            }
+        });
     }
 
-    pub fn console_println<S: AsRef<str>>(&mut self, message: S) {
-        let message_str: String = format!("{}{}", "[CONSOLE]:".blue().bold(),  message.as_ref());
-        self.queue_console_message(message_str);
-        self.process_queue();
-    }
-
-    fn queue_console_message<S: AsRef<str>>(&mut self, message: S) {
-        self.message_queue.push(String::from(message.as_ref()));
-    }
-
-    fn process_queue(&mut self) {
-        while let Some(message) = self.message_queue.pop() {
-            println!("{}", message);
+    pub fn console_println(&self, message: &str) {
+        let mut messages = self.messages_queue.lock().unwrap();
+        if messages.len() >= self.max_capacity {
+            messages.remove(0);
         }
+        messages.push(message.to_string());
     }
 }
