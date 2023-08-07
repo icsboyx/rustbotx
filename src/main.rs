@@ -3,52 +3,58 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
+use std::sync::{Arc, Mutex};
 
 // Import the external custom modules
 mod console;
-mod read_user_input;
+use console::ConsoleQueue;
+
+
+// mod read_user_input;
 mod receive_messages;
 mod send_messages;
 mod startup_config;
 
 fn main() {
     let config = startup_config::load_config();
+    let queue: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
+    let console = ConsoleQueue::new(queue.clone());
+    console.start();
 
-    // Register the CTRL+C signal handler
+    let console_clone_set_handler  =ConsoleQueue::new(queue.clone());
+   // Register the CTRL+C signal handler
     set_handler(move || {
         // println!("CTRL+C signal received. Terminating...");
-        console::println("CTRL+C signal received. Terminating...");
+        console_clone_set_handler.console_println(format!("CTRL+C signal received. Terminating..."));
         std::process::exit(0);
     })
     .expect("Error setting Ctrl-C handler");
 
+
+ 
     match TcpStream::connect("irc.chat.twitch.tv:6667") {
         Ok(mut stream) => {
             // println!("Connected to Twitch IRC server");
-            console::println("Connected to Twitch IRC server");
-
-            // Start a console thread.
-            thread::spawn(move || {
-                console::start_console();
-            });
+            console.console_println(format!("Connected to Twitch IRC server"));
 
             // Clone the stream for the thread that will receive data from socket.
             let stream_clone_receive = stream.try_clone().expect(
                 "Failed to clone  the stream for the thread that will receive data from socket",
             );
+            let console_clone_tcp  =ConsoleQueue::new(queue.clone());
             // Start a new thread to handle message receiving
             thread::spawn(move || {
-                receive_messages::receive_messages(stream_clone_receive);
+                receive_messages::receive_messages(stream_clone_receive,console_clone_tcp);
             });
 
-            // Clone the stream for the thread that read from user input.
-            let stream_clone_user_input = stream
-                .try_clone()
-                .expect("Failed to clone the stream for the thread that will read data user input");
-            // Start a new thread to read data from user input and send it to the channel
-            thread::spawn(move || {
-                read_user_input::read_user_input(stream_clone_user_input);
-            });
+            // // Clone the stream for the thread that read from user input.
+            // let stream_clone_user_input = stream
+            //     .try_clone()
+            //     .expect("Failed to clone the stream for the thread that will read data user input");
+            // // Start a new thread to read data from user input and send it to the channel
+            // thread::spawn(move || {
+            //     read_user_input::read_user_input(stream_clone_user_input);
+            // });
 
             // Send authentication message to the IRC server
             let pass_message = format!("PASS oauth:{}\r\n", config.token);
@@ -60,7 +66,7 @@ fn main() {
                 .write_all(nick_message.as_bytes())
                 .expect("Failed to write to stream");
 
-            console::println("Authentication message sent");
+                console.console_println(format!("Authentication message sent"));
 
             // Join the specified channels
             for channel in &config.channels {
@@ -68,14 +74,14 @@ fn main() {
                 stream
                     .write_all(join_message.as_bytes())
                     .expect("Failed to write to stream");
-                console::println(format!("Joining channel: {}", channel));
+                console.console_println(format!("Joining channel: {}", channel));
                 // let _message = format!("Hello from the bot!");
                 //send_messages(&stream, channel, message);
             }
         }
 
         // Err(e) => eprintln!("Error connecting to Twitch IRC server: {}", e),
-        Err(e) => console::println(format!("Error connecting to Twitch IRC server: {}", e)),
+        Err(e) => println!("Error connecting to Twitch IRC server: {}", e),
     }
     loop {
         // Sleep for 1 second to avoid busy waiting and reduce CPU usage

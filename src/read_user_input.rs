@@ -1,4 +1,4 @@
-#![allow(unused_imports)]
+
 use crate::send_messages;
 use std::io::{self, Write};
 use std::net::TcpStream;
