@@ -3,12 +3,11 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
-use std::sync::{Arc, Mutex};
+// use std::sync::{Arc, Mutex};
 
 // Import the external custom modules
 mod console;
-use console::ConsoleQueue;
-
+use console::console_println;
 
 // mod read_user_input;
 mod receive_messages;
@@ -17,15 +16,13 @@ mod startup_config;
 
 fn main() {
     let config = startup_config::load_config();
-    let queue: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
-    let console = ConsoleQueue::new(queue.clone());
-    console.start();
+ 
 
-    let console_clone_set_handler  =ConsoleQueue::new(queue.clone());
+
    // Register the CTRL+C signal handler
     set_handler(move || {
         // println!("CTRL+C signal received. Terminating...");
-        console_clone_set_handler.console_println(format!("CTRL+C signal received. Terminating..."));
+        console_println("CTRL+C signal received. Terminating...");
         std::process::exit(0);
     })
     .expect("Error setting Ctrl-C handler");
@@ -35,16 +32,15 @@ fn main() {
     match TcpStream::connect("irc.chat.twitch.tv:6667") {
         Ok(mut stream) => {
             // println!("Connected to Twitch IRC server");
-            console.console_println(format!("Connected to Twitch IRC server"));
+            console_println(format!("Connected to Twitch IRC server"));
 
             // Clone the stream for the thread that will receive data from socket.
             let stream_clone_receive = stream.try_clone().expect(
                 "Failed to clone  the stream for the thread that will receive data from socket",
             );
-            let console_clone_tcp  =ConsoleQueue::new(queue.clone());
             // Start a new thread to handle message receiving
             thread::spawn(move || {
-                receive_messages::receive_messages(stream_clone_receive,console_clone_tcp);
+                receive_messages::receive_messages(stream_clone_receive);
             });
 
             // // Clone the stream for the thread that read from user input.
@@ -66,7 +62,7 @@ fn main() {
                 .write_all(nick_message.as_bytes())
                 .expect("Failed to write to stream");
 
-                console.console_println(format!("Authentication message sent"));
+                console_println(format!("Authentication message sent"));
 
             // Join the specified channels
             for channel in &config.channels {
@@ -74,7 +70,7 @@ fn main() {
                 stream
                     .write_all(join_message.as_bytes())
                     .expect("Failed to write to stream");
-                console.console_println(format!("Joining channel: {}", channel));
+                console_println(format!("Joining channel: {}", channel));
                 // let _message = format!("Hello from the bot!");
                 //send_messages(&stream, channel, message);
             }
