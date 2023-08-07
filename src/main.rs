@@ -6,7 +6,7 @@ use std::time::Duration;
 
 // Import the external custom modules
 mod console;
-use console::Console;
+// use console::Console;
 mod standard_console;
 use standard_console::LocalConsole;
 use colored::*;
