@@ -6,9 +6,9 @@ use std::time::Duration;
 
 // Import the external custom modules
 mod console;
-use console::Console;
 mod standard_console;
-use standard_console::LocalConsole;
+// use standard_console::LocalConsole;
+use console::Console;
 use colored::*;
 
 
@@ -20,7 +20,9 @@ mod startup_config;
 fn main() {
     let config = startup_config::load_config();
     // let console = console::Console::new(16);
-    let console = LocalConsole::new(module_path!(), Color::Blue);
+    let console = Console::new(16);
+    
+    let mut console_main = console.clone();
 
     console.console_println("Main Thread ###################################");
 
