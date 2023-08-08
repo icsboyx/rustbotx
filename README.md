@@ -1,4 +1,4 @@
-# Twitch Bot Project
+# Twitch Bot Project (Rust)
 
 ## Overview
 
@@ -22,12 +22,12 @@ This is a Twitch bot written in Rust that connects to the Twitch IRC server and 
 
 1. Clone the repository to your local machine.
 ```bash
-git clone https://github.com/yourusername/twitch-bot.git
+git clone https://github.com/icsboyx/rustbotx.git
 ```
 
 2. Change into the project directory.
 ```bash
-cd twitch-bot
+cd rustbotx
 ```
 
 ### Configuration
