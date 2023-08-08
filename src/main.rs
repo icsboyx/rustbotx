@@ -6,18 +6,12 @@ use std::time::Duration;
 use colored::*;
 
 // Import the external custom modules
-
-// mod console;
-// use console::Console;
 mod standard_console;
 // use standard_console::LocalConsole;
-
-
-
-// mod read_user_input;
 mod receive_messages;
 mod send_messages;
 mod startup_config;
+pub mod irc_engine;
 
 fn main() {
     let config = startup_config::load_config();
