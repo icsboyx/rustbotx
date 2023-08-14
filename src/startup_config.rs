@@ -24,5 +24,5 @@ pub fn load_config() -> Config {
     // println!("Token: {}", config.token);
     // println!("Nickname: {}", config.nickname);
     // println!("Channels: {:?}", config.channels);
-    return config
+    config
 }

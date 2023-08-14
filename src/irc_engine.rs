@@ -1,4 +1,4 @@
-use colored::Colorize;
+
 use chrono::Local;
 use std::{io::Write, net::TcpStream};
 
@@ -34,19 +34,22 @@ pub fn irc_server_messages_engine(stream: &TcpStream, payload: IRCMessage) {
             send_server_message(stream, &reply);
 
         }
+        ("!Ciao",true) => {
+            c_println!("Received a !Ciao command!".yellow().bold());
+        }
         _ => {
-            //to do
+            //to do 
         }
     };
     match payload.message.to_lowercase().as_str() {
         "ciao" =>{
-            let message = format!("@{} Hello to you my friend! ", payload.server_operation.sender.split(":").nth(1).unwrap().split("!").next().unwrap());
+            let message = format!("@{} Hello to you my friend! ", payload.server_operation.sender.split(':').nth(1).unwrap().split('!').next().unwrap());
             let reply = format!("{} {} :{}\r\n",payload.server_operation.message_type, payload.server_operation.context, message);
             println!("Ciao Found!");
             send_server_message(stream, &reply);
         }
         "!time"=>{
-        let message = format!("{}",  Local::now().format("%H:%M:%S").to_string());
+        let message = Local::now().format("%H:%M:%S").to_string();
         let reply = format!("{} {} :{}\r\n",payload.server_operation.message_type, payload.server_operation.context, message);
         send_server_message(stream, &reply);
         }
@@ -66,16 +69,13 @@ pub fn send_server_message(mut stream: &TcpStream, payload: &str) {
 
 
 pub fn parse_server_messages(stream: &TcpStream, message: &str){
-    let server_messages: Vec<String> = message.splitn(3, ":").map(|s| s.to_string()).collect();
-    // [0]: String => server_command
-    // [1]: Vec<String> => sender, [message_type],  [channel]
-    // [2]:String => message
-    let part_a: Vec<String> = message.splitn(3,":").map(|s| s.to_string()).collect();
-    let part_b: Vec<String> = message.split(" ").map(|s| s.to_string()).collect();
-    let mut payload = IRCMessage {
-        server_command: if part_a.len() > 0 { part_a[0].clone() } else { "".to_string() },
+
+    let part_a: Vec<String> = message.splitn(3,':').map(|s| s.to_string()).collect();
+    let part_b: Vec<String> = message.split(' ').map(|s| s.to_string()).collect();
+    let payload = IRCMessage {
+        server_command: if !part_a.is_empty() { part_a[0].clone() } else { "".to_string() },
         server_operation: ServerOperation {
-            sender: if part_b.len() > 0 { part_b[0].clone() } else { "".to_string() },
+            sender: if !part_b.is_empty() { part_b[0].clone() } else { "".to_string() },
             message_type: if part_b.len() > 1 { part_b[1].clone() } else { "".to_string() },
             context: if part_b.len() > 2 { part_b[2].clone() } else { "".to_string() },
         },
@@ -84,6 +84,3 @@ pub fn parse_server_messages(stream: &TcpStream, message: &str){
     irc_server_messages_engine(stream, payload);
 }
 
-
-
-// whisoer model :<to-user>!<to-user>@<to-user>.tmi.twitch.tv WHISPER <from-user> :<message>

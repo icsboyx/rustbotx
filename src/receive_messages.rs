@@ -31,7 +31,7 @@ pub fn receive_messages(mut stream: TcpStream,) {
                     .expect("Failed to parse message");
 
                 c_println!(format!("[RAW]{}", message));
-                let mut messages_split = message.split("\r\n");
+                let messages_split = message.split("\r\n");
                 // Process each message
                 for message in messages_split {
                     if !message.is_empty() {
