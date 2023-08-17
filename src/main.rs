@@ -8,19 +8,18 @@ use colored::*;
 // Import the external custom modules
 mod standard_console;
 mod startup_config;
-pub mod irc_engine;
-use crate::irc_engine::irc_connect;
+mod irc;
+use irc::irc_engine::*;
 
 fn main() {
     let config = startup_config::load_config();
     // let console = console::Console::new(16);
 
+    c_println!("### Main Thread ###");
+    
     irc_connect(config);
 
-    c_println!("Main Thread ###################################");
-
-
-   // Register the CTRL+C signal handler
+    // Register the CTRL+C signal handler
     set_handler(move || {
         // println!("CTRL+C signal received. Terminating...");
         println!("{}","CTRL+C signal received. Terminating...".red().bold().underline());

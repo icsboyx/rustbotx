@@ -4,9 +4,13 @@ use std::io::Read;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
+    pub server: String,
+    pub port: i32,
+    pub ssl_tls: bool,
     pub token: String,
     pub nickname: String,
     pub channels: Vec<String>,
+
 }
 
 pub fn load_config() -> Config {

@@ -12,9 +12,10 @@ chrono = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 crossterm = "0.27.0"
-colored = "1.0"
-termion = "1.5"
+colored = "2.0"
+termion = "2.0"
 term_size = "0.3.1"
 anyhow = "1.0"
-ratatui = { version = "0.22.0", features = ["all-widgets"]}
 itertools = "0.11"
+openssl = { version = "0.10", features = ["vendored"] }
+openssl-sys = "0.9"
