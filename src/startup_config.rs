@@ -23,11 +23,5 @@ pub fn load_config() -> Config {
 
     // Deserialize the JSON content into the Config struct
     let config: Config = serde_json::from_str(&contents).expect("Failed to parse config.json");
-
-    // Print configuration data
-    // println!("{:#?}", config);
-    // println!("Token: {}", config.token);
-    // println!("Nickname: {}", config.nickname);
-    // println!("Channels: {:?}", config.channels);
     config
 }
