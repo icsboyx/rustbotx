@@ -38,12 +38,12 @@ pub fn irc_connect(config: Config) {
 
     match create_streams {
         StreamType::MyTcpStream(rx, tx) => {
-            rx_stream = rx as Arc<Mutex<dyn Read + Send>>; // Convert to the appropriate trait object
-            tx_stream = tx as Arc<Mutex<dyn Write + Send>>; // Convert to the appropriate trait object
+            rx_stream = rx as Arc<Mutex<dyn Read + Send>>; 
+            tx_stream = tx as Arc<Mutex<dyn Write + Send>>; 
         }
         StreamType::MySslStream(rx, tx) => {
-            rx_stream = rx as Arc<Mutex<dyn Read + Send>>; // Convert to the appropriate trait object
-            tx_stream = tx as Arc<Mutex<dyn Write + Send>>; // Convert to the appropriate trait object
+            rx_stream = rx as Arc<Mutex<dyn Read + Send>>; 
+            tx_stream = tx as Arc<Mutex<dyn Write + Send>>; 
         }
     }
 
