@@ -34,13 +34,18 @@ cd rustbotx
 
 Before running the bot, make sure to create a `config.json` file in the project directory with the following content:
 
+
 ```json
-{
+  "server":"irc.server.addr",
+  "port": 6667,
+  "ssl_tls": true, 
   "token": "YOUR_TWITCH_OAUTH_TOKEN",
   "nickname": "YOUR_BOT_NICKNAME",
-  "channels": ["channel1", "channel2", "channel3"]
-}
+  "channels": ["channel1", "channel2", "channel3", "channel_N"]
 ```
+* "ssl_tls": true,  for ssl/tls
+* "ssl_tls": false for tcp clear 
+
 Replace YOUR_TWITCH_OAUTH_TOKEN with your Twitch OAuth token, and YOUR_BOT_NICKNAME with your desired bot nickname. Add the Twitch channels you want the bot to join in the "channels" array.
 
 ### Usage

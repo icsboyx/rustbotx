@@ -1,5 +1,8 @@
 {
-    "token": "Your token",
-    "nickname": "Your nick",
-    "channels": ["Channel_1","Channel_2","Channel_N"]
+  "server":"irc.server.addr",
+  "port": 6667,
+  "ssl_tls": true,
+  "token": "YOUR_TWITCH_OAUTH_TOKEN",
+  "nickname": "YOUR_BOT_NICKNAME",
+  "channels": ["channel1", "channel2", "channel3", "channel_N"]
 }
