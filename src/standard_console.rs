@@ -38,10 +38,9 @@ macro_rules! c_println {
     }};
 }
 
-
 #[macro_export]
 macro_rules! new_c_println {
-($input:expr) => {
-    //todo:
-};
+    ($input:expr) => {
+        //todo:
+    };
 }

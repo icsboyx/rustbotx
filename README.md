@@ -39,6 +39,7 @@ Before running the bot, make sure to create a `config.json` file in the project 
   "server":"irc.server.addr",
   "port": 6667,
   "ssl_tls": true, 
+  "ssl_verify_mode" : true,
   "token": "YOUR_TWITCH_OAUTH_TOKEN",
   "nickname": "YOUR_BOT_NICKNAME",
   "channels": ["channel1", "channel2", "channel3", "channel_N"]

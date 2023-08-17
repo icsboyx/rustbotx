@@ -89,7 +89,7 @@ pub fn irc_connect(config: Config) {
                     .unwrap()
                     .write_all(tx_payload.as_bytes())
                     .unwrap();
-                c_println!(format!("{}{}", "[TX]".cyan().bold(), tx_payload));
+                c_println!(format!(" {}{}", "[TX]".cyan().bold(), tx_payload));
             }
         });
 
@@ -131,7 +131,9 @@ fn create_tcp_streams(tcp_stream: TcpStream) -> StreamType {
 fn create_ssl_streams(tcp_stream: TcpStream, config: &Config) -> StreamType {
     // Create an OpenSSL SSL connector.
     let mut connector = SslConnector::builder(SslMethod::tls()).unwrap();
-    connector.set_verify(openssl::ssl::SslVerifyMode::NONE);
+    if !config.ssl_verify_mode {
+        connector.set_verify(openssl::ssl::SslVerifyMode::NONE);
+    }
     let connector = connector.build();
     // Wrap the TcpStream in an SSL stream.
     let ssl_stream = connector
