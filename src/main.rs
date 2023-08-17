@@ -7,7 +7,7 @@ use std::time::Duration;
 mod irc;
 mod standard_console;
 mod startup_config;
-use irc::{irc_actions::*, irc_engine::*, irc_parser::*};
+use irc::irc_engine::*;
 
 fn main() {
     let config = startup_config::load_config();
