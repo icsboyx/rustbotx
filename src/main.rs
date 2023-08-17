@@ -7,6 +7,7 @@ use std::time::Duration;
 mod irc;
 mod standard_console;
 mod startup_config;
+mod tts_engine;
 use irc::irc_engine::*;
 
 fn main() {

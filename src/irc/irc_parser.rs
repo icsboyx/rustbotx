@@ -1,6 +1,6 @@
-use itertools::Itertools;
-
 use crate::c_println;
+use crate::tts_engine::tts_engine::*;
+use itertools::Itertools;
 
 #[derive(Debug)]
 pub struct IRCMessage {
@@ -37,5 +37,6 @@ pub fn irc_parse_message(raw_message: String) -> IRCMessage {
         message: message_split[2].to_string(),
     };
     c_println!(format!("{} {:#?}", "[RX]".green().bold(), irc_message));
+    tts_engine(irc_message.message.clone());
     irc_message
 }
