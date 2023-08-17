@@ -16,8 +16,8 @@ pub struct ServerOperation {
 }
 
 
-fn irc_parser(raw_message: String) {
- let parse_server_messages = move |raw_message: &str| {
+pub fn irc_parse_message(raw_message: String) -> IRCMessage {
+
     c_println!(format!("{} {}", "[RX]".green().bold(), raw_message));
     let message_split: Vec<String> = raw_message
         .splitn(3, ':')
@@ -39,7 +39,6 @@ fn irc_parser(raw_message: String) {
     };
     c_println!(format!("{} {:#?}", "[RX]".green().bold(), irc_message));
     irc_message
-};
 }
 
 

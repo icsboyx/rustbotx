@@ -9,7 +9,7 @@ use colored::*;
 mod standard_console;
 mod startup_config;
 mod irc;
-use irc::irc_engine::*;
+use irc::{irc_engine::*, irc_parser::*, irc_actions::*};
 
 fn main() {
     let config = startup_config::load_config();
